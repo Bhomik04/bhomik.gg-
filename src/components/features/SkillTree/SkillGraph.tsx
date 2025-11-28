@@ -9,11 +9,14 @@ import ReactFlow, {
     useNodesState,
     useEdgesState,
     ConnectionLineType,
+    NodeMouseHandler
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import CustomNode from "./CustomNode";
+import { Skill } from "@/types/rpg";
+import { GameEngine } from "@/lib/GameEngine";
 
 const nodeTypes = {
     skill: CustomNode,
@@ -46,10 +49,10 @@ export default function SkillGraph({ className = "" }: { className?: string }) {
             const xOffsetMap: Record<string, number> = {};
 
             snapshot.docs.forEach((doc, index) => {
-                const data = doc.data();
+                const data = doc.data() as Skill;
                 // Basic positioning logic for demo purposes
                 // In a real app, you'd use a layout library like dagre or elkjs
-                const parentId = data.parent_id;
+                const parentId = data.parentId;
                 const x = parentId ? (xOffsetMap[parentId] || 0) + (index % 2 === 0 ? -150 : 150) : 0;
                 const y = parentId ? (yOffset + 150) : 0;
 
@@ -63,14 +66,16 @@ export default function SkillGraph({ className = "" }: { className?: string }) {
                     data: {
                         label: data.label,
                         status: data.status,
-                        category: data.category
+                        category: data.category,
+                        xpReward: data.xpReward,
+                        requiredLevel: data.requiredLevel
                     },
                 });
 
-                if (data.parent_id) {
+                if (data.parentId) {
                     fetchedEdges.push({
-                        id: `e-${data.parent_id}-${doc.id}`,
-                        source: data.parent_id,
+                        id: `e-${data.parentId}-${doc.id}`,
+                        source: data.parentId,
                         target: doc.id,
                         type: "smoothstep",
                         animated: data.status !== "locked",
@@ -88,6 +93,17 @@ export default function SkillGraph({ className = "" }: { className?: string }) {
         return () => unsubscribe();
     }, [setNodes, setEdges]);
 
+    const onNodeClick: NodeMouseHandler = useCallback(async (event, node) => {
+        if (node.data.status === 'locked') {
+            try {
+                await GameEngine.unlockSkill(node.id);
+                // Success notification could be added here
+            } catch (error: any) {
+                alert(error.message); // Simple alert for now
+            }
+        }
+    }, []);
+
     return (
         <div className={`w-full border border-neon-cyan/30 bg-cyber-black/80 backdrop-blur-md rounded-lg overflow-hidden ${className || "h-[600px]"}`}>
             <ReactFlow
@@ -96,6 +112,7 @@ export default function SkillGraph({ className = "" }: { className?: string }) {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 nodeTypes={nodeTypes}
+                onNodeClick={onNodeClick}
                 fitView
                 attributionPosition="bottom-right"
             >

@@ -1,0 +1,18 @@
+query GetUser($id: UUID!) @auth(level: PUBLIC) {
+  user(id: $id) {
+    id
+    displayName
+    createdAt
+    email
+    photoUrl
+  }
+}
+
+mutation CreateUser($displayName: String!, $email: String, $photoUrl: String) @auth(level: PUBLIC) {
+  user_insert(data: {
+    displayName: $displayName,
+    email: $email,
+    photoUrl: $photoUrl,
+    createdAt_expr: "request.time"
+  })
+}

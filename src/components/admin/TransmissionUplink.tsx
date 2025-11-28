@@ -12,6 +12,7 @@ export default function TransmissionUplink() {
 
     const handleAddLog = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!db) return;
         setLoading(true);
         try {
             await addDoc(collection(db, "activity_logs"), {
@@ -35,8 +36,9 @@ export default function TransmissionUplink() {
             <h2 className="text-xl text-neon-green mb-4">TRANSMISSION UPLINK</h2>
             <form onSubmit={handleAddLog} className="space-y-4">
                 <div>
-                    <label className="block text-xs text-neon-green/70 mb-1">LOG MESSAGE</label>
+                    <label htmlFor="log-message" className="block text-xs text-neon-green/70 mb-1">LOG MESSAGE</label>
                     <textarea
+                        id="log-message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         className="w-full bg-cyber-black border border-neon-green/50 p-2 text-neon-green focus:outline-none focus:border-neon-green h-24"
@@ -44,8 +46,9 @@ export default function TransmissionUplink() {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs text-neon-green/70 mb-1">REFERENCE URL (OPTIONAL)</label>
+                    <label htmlFor="log-url" className="block text-xs text-neon-green/70 mb-1">REFERENCE URL (OPTIONAL)</label>
                     <input
+                        id="log-url"
                         type="url"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}

@@ -1,9 +1,29 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, Environment, Html, useProgress } from "@react-three/drei";
 import { Suspense } from "react";
 import Model from "./Model";
+
+function Loader() {
+    const { progress } = useProgress();
+    return (
+        <Html center>
+            <div className="text-neon-cyan font-mono text-sm">
+                <div className="flex flex-col items-center gap-2">
+                    <div className="text-lg font-bold">LOADING NEURAL INTERFACE...</div>
+                    <div className="w-48 h-1 bg-cyber-gray/30 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-neon-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)] transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                    <div className="text-xs opacity-70">{progress.toFixed(0)}%</div>
+                </div>
+            </div>
+        </Html>
+    );
+}
 
 export default function AvatarScene() {
     return (
@@ -36,7 +56,7 @@ export default function AvatarScene() {
                 {/* Fill Light */}
                 <pointLight position={[0, -2, 2]} intensity={5} color="#b026ff" />
 
-                <Suspense fallback={null}>
+                <Suspense fallback={<Loader />}>
                     <Model position={[0, -1, 0]} />
                     <Environment preset="city" />
                 </Suspense>

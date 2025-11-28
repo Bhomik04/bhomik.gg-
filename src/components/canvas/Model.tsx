@@ -1,39 +1,32 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { useRef, useEffect } from "react";
 import { Group } from "three";
 
 export default function Model(props: any) {
     const group = useRef<Group>(null);
-    const [error, setError] = useState(false);
 
-    // Try to load the model, fallback to box if failed or not found
-    let nodes, materials;
-    try {
-        const gltf = useGLTF("/model.glb");
-        nodes = gltf.nodes;
-        materials = gltf.materials;
-    } catch (e) {
-        // console.warn("Avatar model not found, using placeholder.");
-    }
+    // Load the model
+    const { scene, animations } = useGLTF("/model.glb");
+    const { actions, mixer } = useAnimations(animations, group);
 
-    if (!nodes || error) {
-        return (
-            <group {...props} dispose={null}>
-                <mesh>
-                    <boxGeometry args={[1, 2, 1]} />
-                    <meshStandardMaterial color="cyan" wireframe />
-                </mesh>
-            </group>
-        );
-    }
+    // Play the first animation if available
+    useEffect(() => {
+        if (actions && Object.keys(actions).length > 0) {
+            const firstAction = Object.values(actions)[0];
+            if (firstAction) {
+                firstAction.reset().play();
+            }
+        }
+    }, [actions]);
 
     return (
         <group ref={group} {...props} dispose={null}>
-            <primitive object={nodes.Scene || nodes.root} />
+            <primitive object={scene} scale={1} />
         </group>
     );
 }
 
-useGLTF.preload("/avatar.glb");
+// Preload the model for faster initial render
+useGLTF.preload("/model.glb");

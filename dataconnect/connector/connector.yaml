@@ -1,0 +1,7 @@
+connectorId: "portfolio-rpg-connector"
+authMode: "PUBLIC" # or "REQUIRED" depending on your needs
+generate:
+  javascriptSdk:
+    outputDir: "../../src/lib/dataconnect-generated"
+    package: "@firebasegen/portfolio-rpg"
+    packageJsonDir: "../../"

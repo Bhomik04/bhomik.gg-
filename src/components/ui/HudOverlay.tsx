@@ -6,6 +6,8 @@ import { ChevronRight, Zap, Lock, Unlock, Star } from "lucide-react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import SkillPentagon from "../features/SkillPentagon";
+import { usePlayerStats } from "@/hooks/usePlayerStats";
+import XPNotification from "./XPNotification";
 
 interface Skill {
     id: string;
@@ -17,7 +19,33 @@ interface Skill {
 export default function HudOverlay() {
     const [currentTime, setCurrentTime] = useState("");
     const [skills, setSkills] = useState<Skill[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingSkills, setLoadingSkills] = useState(true);
+    const { stats: playerStats, loading: loadingStats } = usePlayerStats();
+
+    // Default stats to ensure UI is always populated
+    const displayStats = playerStats || {
+        level: 1,
+        currentXP: 0,
+        xpToNextLevel: 1000,
+        totalXP: 0,
+        status: "ONLINE",
+        location: "Night City",
+        bio: "",
+        attributes: {
+            technical: 3,
+            creative: 3,
+            intelligence: 3,
+            collaboration: 3,
+            learning: 3
+        },
+        attributeXP: {
+            technical: 0,
+            creative: 0,
+            intelligence: 0,
+            collaboration: 0,
+            learning: 0
+        }
+    };
 
     useEffect(() => {
         setCurrentTime(new Date().toLocaleTimeString());
@@ -30,7 +58,7 @@ export default function HudOverlay() {
     // Fetch skills from Firebase
     useEffect(() => {
         if (!db) {
-            setLoading(false);
+            setLoadingSkills(false);
             return;
         }
 
@@ -42,11 +70,11 @@ export default function HudOverlay() {
                     ...doc.data(),
                 })) as Skill[];
                 setSkills(skillsData);
-                setLoading(false);
+                setLoadingSkills(false);
             },
             (error) => {
                 console.error("Error fetching skills:", error);
-                setLoading(false);
+                setLoadingSkills(false);
             }
         );
 
@@ -54,11 +82,11 @@ export default function HudOverlay() {
     }, []);
 
     const attributes = [
-        { name: "BODY", current: 3, max: 20 },
-        { name: "REFLEX", current: 3, max: 20 },
-        { name: "TECHNICAL", current: 3, max: 20 },
-        { name: "INTELLIGENCE", current: 3, max: 20 },
-        { name: "COOL", current: 3, max: 20 },
+        { name: "LEARNING", current: displayStats.attributes.learning, max: 20 },
+        { name: "COLLABORATION", current: displayStats.attributes.collaboration, max: 20 },
+        { name: "TECHNICAL", current: displayStats.attributes.technical, max: 20 },
+        { name: "INTELLIGENCE", current: displayStats.attributes.intelligence, max: 20 },
+        { name: "CREATIVE", current: displayStats.attributes.creative, max: 20 },
     ];
 
     // Group skills by category
@@ -96,16 +124,20 @@ export default function HudOverlay() {
 
     return (
         <div className="pointer-events-none fixed inset-0 z-40 flex">
+            <XPNotification />
+            
             {/* LEFT SIDEBAR - Stats */}
             <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-64 p-6 pt-20 flex flex-col gap-6"
+                className="w-64 p-6 pt-20 flex flex-col gap-6 h-full"
             >
                 {/* Header */}
                 <div className="border-l-2 border-neon-cyan pl-4">
-                    <div className="text-neon-cyan text-2xl font-bold tracking-wider">2</div>
+                    <div className="text-neon-cyan text-2xl font-bold tracking-wider">
+                        {displayStats.level + 1}
+                    </div>
                     <div className="text-neon-cyan/70 text-xs uppercase tracking-widest">STREET CRED</div>
                 </div>
 
@@ -137,7 +169,25 @@ export default function HudOverlay() {
                 </div>
 
                 {/* Pentagon Chart */}
-                <SkillPentagon />
+                <div className="mt-auto pt-6 pb-6">
+                    <div className="border border-neon-cyan/30 bg-black/20 p-4 relative">
+                        {/* Corner accents */}
+                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-neon-cyan"/>
+                        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-neon-cyan"/>
+                        <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-neon-cyan"/>
+                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-neon-cyan"/>
+                        
+                        <div className="text-center mb-2">
+                            <span className="text-[10px] uppercase tracking-widest text-neon-cyan/70 font-bold">
+                                Skill Distribution
+                            </span>
+                        </div>
+                        
+                        <div className="aspect-square w-full flex items-center justify-center">
+                            <SkillPentagon skills={displayStats.attributes} maxValue={20} />
+                        </div>
+                    </div>
+                </div>
             </motion.div>
 
             {/* RIGHT SIDEBAR - Skills */}
@@ -160,7 +210,7 @@ export default function HudOverlay() {
 
                 {/* Skills List */}
                 <div className="space-y-4 overflow-y-auto max-h-[500px] custom-scrollbar">
-                    {loading ? (
+                    {loadingSkills ? (
                         <div className="text-neon-cyan/50 text-xs text-center">Loading skills...</div>
                     ) : Object.keys(groupedSkills).length === 0 ? (
                         <div className="text-neon-cyan/50 text-xs text-center">
@@ -199,7 +249,7 @@ export default function HudOverlay() {
                     </div>
                     <div className="flex justify-between items-center text-xs">
                         <span className="text-neon-red/50 uppercase tracking-widest">Level</span>
-                        <span className="text-neon-red font-bold">1</span>
+                        <span className="text-neon-red font-bold">{playerStats?.level || 1}</span>
                     </div>
                 </div>
             </motion.div>
@@ -207,10 +257,10 @@ export default function HudOverlay() {
             {/* Top branding - moved to left */}
             <div className="absolute top-6 left-6 text-left pointer-events-none">
                 <div className="text-neon-cyan text-sm font-bold tracking-[0.3em] drop-shadow-[0_0_8px_rgba(0,243,255,0.8)]">
-                    BHOMIK GOYAL
+                    {playerStats?.name.toUpperCase() || "BHOMIK GOYAL"}
                 </div>
                 <div className="text-neon-cyan/50 text-[10px] uppercase tracking-widest mt-1">
-                    NETRUNNER // LVL 01
+                    {playerStats?.class.toUpperCase() || "NETRUNNER"} // LVL {playerStats?.level.toString().padStart(2, '0') || "01"}
                 </div>
             </div>
         </div>

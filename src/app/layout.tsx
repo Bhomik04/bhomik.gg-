@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${orbitron.variable} ${rajdhani.variable} antialiased bg-cyber-black text-foreground overflow-hidden h-screen w-screen`}
       >
         <Scanlines />

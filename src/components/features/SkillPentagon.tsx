@@ -7,28 +7,29 @@ interface SkillPentagonProps {
     skills?: {
         technical: number;
         creative: number;
+        intelligence: number;
         collaboration: number;
-        problemSolving: number;
         learning: number;
     };
+    maxValue?: number;
 }
 
-export default function SkillPentagon({ skills }: SkillPentagonProps) {
+export default function SkillPentagon({ skills, maxValue = 100 }: SkillPentagonProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Default skill values (0-100)
     const skillData = skills || {
-        technical: 75,
-        creative: 60,
-        problemSolving: 80,
-        collaboration: 70,
-        learning: 85,
+        technical: 10,
+        creative: 10,
+        intelligence: 10,
+        collaboration: 10,
+        learning: 10,
     };
 
     const skillLabels = [
         "TECHNICAL",
         "CREATIVE",
-        "PROBLEM\nSOLVING",
+        "INTELLIGENCE",
         "COLLABORATION",
         "LEARNING",
     ];
@@ -79,11 +80,19 @@ export default function SkillPentagon({ skills }: SkillPentagonProps) {
         }
 
         // Draw skill data polygon
-        const values = Object.values(skillData);
+        // Map attributes to the labels: TECHNICAL, CREATIVE, INTELLIGENCE, COLLABORATION, LEARNING
+        const values = [
+            skillData.technical,
+            skillData.creative,
+            skillData.intelligence,
+            skillData.collaboration,
+            skillData.learning
+        ];
+        
         ctx.beginPath();
         values.forEach((value, i) => {
             const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-            const distance = (value / 100) * radius;
+            const distance = (value / maxValue) * radius;
             const x = centerX + Math.cos(angle) * distance;
             const y = centerY + Math.sin(angle) * distance;
             if (i === 0) ctx.moveTo(x, y);

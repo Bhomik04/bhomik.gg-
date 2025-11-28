@@ -2,20 +2,23 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Home, Brain, Terminal } from "lucide-react";
+import { Home, Brain, Terminal, User, Briefcase, Archive, Radio } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Navigation() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const currentView = searchParams?.get("view");
 
     const links = [
         { href: "/", label: "STATS", icon: Home },
+        { href: "/about", label: "PROFILE", icon: User },
+        { href: "/projects", label: "MISSIONS", icon: Briefcase },
+        { href: "/experience", label: "ARCHIVES", icon: Archive },
+        { href: "/contact", label: "COMMS", icon: Radio },
         { href: "/?view=skills", label: "SKILL TREE", icon: Brain },
         { href: "/admin", label: "ADMIN", icon: Terminal },
     ];
-
-    const searchParams = useSearchParams();
-    const currentView = searchParams.get("view");
 
     return (
         <nav className="pointer-events-auto fixed top-6 right-6 z-50 flex gap-2">

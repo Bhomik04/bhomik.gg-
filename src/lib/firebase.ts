@@ -1,6 +1,12 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { 
+  getFirestore, 
+  Firestore, 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from "firebase/firestore";
+import { getAuth, Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,15 +17,35 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase only if API key is present
-let app;
-let db;
-let auth;
+let app: FirebaseApp | undefined;
+let db: Firestore | undefined;
+let auth: Auth | undefined;
 
-if (firebaseConfig.apiKey) {
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app);
-  auth = getAuth(app);
+if (typeof window !== "undefined" && firebaseConfig.apiKey) {
+  try {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    
+    // Initialize Firestore with persistent cache to support offline mode
+    try {
+      db = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager()
+        })
+      });
+    } catch (e: any) {
+      // If already initialized (e.g. during HMR), fallback to existing instance
+      if (e.code === 'failed-precondition' || e.message?.includes('already been started')) {
+        db = getFirestore(app);
+      } else {
+        console.error("Firestore initialization error:", e);
+      }
+    }
+
+    auth = getAuth(app);
+    console.log("Firebase initialized successfully");
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+  }
 }
 
 export { app, db, auth };

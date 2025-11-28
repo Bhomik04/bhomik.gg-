@@ -12,6 +12,7 @@ export default function SkillArchitect() {
 
     const handleAddSkill = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!db) return;
         setLoading(true);
         try {
             await addDoc(collection(db, "skills"), {
@@ -35,8 +36,9 @@ export default function SkillArchitect() {
             <h2 className="text-xl text-neon-purple mb-4">SKILL ARCHITECT</h2>
             <form onSubmit={handleAddSkill} className="space-y-4">
                 <div>
-                    <label className="block text-xs text-neon-purple/70 mb-1">SKILL LABEL</label>
+                    <label htmlFor="skill-label" className="block text-xs text-neon-purple/70 mb-1">SKILL LABEL</label>
                     <input
+                        id="skill-label"
                         type="text"
                         value={label}
                         onChange={(e) => setLabel(e.target.value)}
@@ -45,8 +47,9 @@ export default function SkillArchitect() {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs text-neon-purple/70 mb-1">CATEGORY</label>
+                    <label htmlFor="skill-category" className="block text-xs text-neon-purple/70 mb-1">CATEGORY</label>
                     <select
+                        id="skill-category"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="w-full bg-cyber-black border border-neon-purple/50 p-2 text-neon-purple focus:outline-none focus:border-neon-purple"
