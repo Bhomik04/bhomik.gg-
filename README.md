@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bhomik Goyal - Living Portfolio RPG 🎮
 
-## Getting Started
+A real-time, **Cyberpunk 2077-inspired** portfolio website that functions as an RPG character sheet. Track skills, level up, and showcase your journey as a developer in style.
 
-First, run the development server:
+## ✨ Features
+
+- **3D Avatar**: Interactive 3D character model with Cyberpunk lighting
+- **Real-time Skill Tree**: Dynamic skill graph with locked/unlocked/mastered states
+- **HUD Overlay**: Cyberpunk-style stats display with pentagon skill chart
+- **Admin Dashboard**: Manage skills, quests, and activity logs
+- **Live Updates**: Real-time Firebase integration
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- Firebase account (for backend)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/Bhomik04/bhomik.gg-.git
+cd bhomik.gg-
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Add your Firebase credentials to .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the portfolio.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS v4
+- **3D Graphics**: React Three Fiber + Three.js
+- **Backend**: Firebase (Firestore + Auth)
+- **UI Components**: Framer Motion, React Flow
+- **Icons**: Lucide React
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+├── src/
+│   ├── app/              # Next.js app router pages
+│   ├── components/       # React components
+│   │   ├── canvas/      # 3D scene components
+│   │   ├── features/    # Feature-specific components
+│   │   └── ui/          # UI components
+│   └── lib/             # Utilities and configurations
+├── public/              # Static assets
+└── .env.local          # Environment variables
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Cyberpunk Theme
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The UI features:
+- Neon cyan, red, and purple color palette
+- Scanline effects and vignettes
+- Custom fonts (Orbitron, Rajdhani)
+- Glassmorphism and glowing elements
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is open source and available under the MIT License.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+---
+
+Built with ❤️ by Bhomik Goyal
