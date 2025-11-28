@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ChevronRight, Zap, Lock, Unlock, Star } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight, Zap, Lock, Unlock, Star, ChevronDown, ChevronUp } from "lucide-react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import SkillPentagon from "../features/SkillPentagon";
@@ -20,6 +20,8 @@ export default function HudOverlay() {
     const [currentTime, setCurrentTime] = useState("");
     const [skills, setSkills] = useState<Skill[]>([]);
     const [loadingSkills, setLoadingSkills] = useState(true);
+    const [showMobileStats, setShowMobileStats] = useState(false);
+    const [showMobileSkills, setShowMobileSkills] = useState(false);
     const { stats: playerStats, loading: loadingStats } = usePlayerStats();
 
     // Default stats to ensure UI is always populated
@@ -123,15 +125,147 @@ export default function HudOverlay() {
     };
 
     return (
-        <div className="pointer-events-none fixed inset-0 z-40 flex">
+        <div className="pointer-events-none fixed inset-0 z-40 flex flex-col md:flex-row">
             <XPNotification />
+
+            {/* Mobile Header - Player Info */}
+            <div className="md:hidden pointer-events-auto">
+                <div className="bg-cyber-black/90 backdrop-blur-lg border-b border-neon-cyan/20 px-4 py-3">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-neon-cyan text-sm font-bold tracking-[0.2em] drop-shadow-[0_0_8px_rgba(0,243,255,0.8)]">
+                                {playerStats?.name?.toUpperCase() || "BHOMIK GOYAL"}
+                            </div>
+                            <div className="text-neon-cyan/50 text-[10px] uppercase tracking-widest">
+                                {playerStats?.class?.toUpperCase() || "NETRUNNER"} // LVL {playerStats?.level?.toString().padStart(2, '0') || "01"}
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-neon-cyan text-xl font-bold">
+                                {displayStats.level + 1}
+                            </div>
+                            <div className="text-neon-cyan/70 text-[10px] uppercase tracking-widest">STREET CRED</div>
+                        </div>
+                    </div>
+
+                    {/* XP Progress Bar */}
+                    <div className="mt-2">
+                        <div className="h-1 w-full bg-cyber-gray/50 rounded-full overflow-hidden">
+                            <motion.div
+                                className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(displayStats.currentXP / displayStats.xpToNextLevel) * 100}%` }}
+                            />
+                        </div>
+                        <div className="text-[10px] text-neon-cyan/50 mt-1 font-mono">
+                            {displayStats.currentXP} / {displayStats.xpToNextLevel} XP
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile Collapsible Stats */}
+                <button
+                    onClick={() => setShowMobileStats(!showMobileStats)}
+                    className="w-full bg-cyber-black/80 backdrop-blur-sm border-b border-neon-cyan/10 px-4 py-2 flex items-center justify-between text-neon-cyan/70"
+                >
+                    <span className="text-xs uppercase tracking-widest font-mono">Attributes</span>
+                    {showMobileStats ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+
+                <AnimatePresence>
+                    {showMobileStats && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="bg-cyber-black/80 backdrop-blur-sm overflow-hidden"
+                        >
+                            <div className="p-4 grid grid-cols-2 gap-3">
+                                {attributes.map((attr) => (
+                                    <div key={attr.name} className="text-xs">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-neon-cyan/90 font-mono tracking-wider flex items-center gap-1">
+                                                <Zap className="w-3 h-3" /> {attr.name}
+                                            </span>
+                                            <span className="text-neon-cyan font-bold">{attr.current}</span>
+                                        </div>
+                                        <div className="h-1 w-full bg-cyber-gray/30 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-neon-cyan shadow-[0_0_8px_rgba(0,243,255,0.6)]"
+                                                style={{ width: `${(attr.current / attr.max) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {/* Mobile Pentagon */}
+                            <div className="px-4 pb-4">
+                                <div className="border border-neon-cyan/30 bg-black/20 p-3 relative">
+                                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-neon-cyan"/>
+                                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-neon-cyan"/>
+                                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-neon-cyan"/>
+                                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-neon-cyan"/>
+                                    <div className="aspect-square w-full max-w-[200px] mx-auto flex items-center justify-center">
+                                        <SkillPentagon skills={displayStats.attributes} maxValue={20} />
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Mobile Collapsible Skills */}
+                <button
+                    onClick={() => setShowMobileSkills(!showMobileSkills)}
+                    className="w-full bg-cyber-black/80 backdrop-blur-sm border-b border-neon-cyan/10 px-4 py-2 flex items-center justify-between text-neon-red/70"
+                >
+                    <span className="text-xs uppercase tracking-widest font-mono">Skills ({skills.filter(s => s.status === "mastered").length}/{skills.length})</span>
+                    {showMobileSkills ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+
+                <AnimatePresence>
+                    {showMobileSkills && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="bg-cyber-black/80 backdrop-blur-sm overflow-hidden"
+                        >
+                            <div className="p-4 max-h-[300px] overflow-y-auto">
+                                {loadingSkills ? (
+                                    <div className="text-neon-cyan/50 text-xs text-center">Loading skills...</div>
+                                ) : Object.keys(groupedSkills).length === 0 ? (
+                                    <div className="text-neon-cyan/50 text-xs text-center">
+                                        No skills found. Add skills in Admin panel.
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {skills.slice(0, 10).map((skill) => (
+                                            <div
+                                                key={skill.id}
+                                                className={`flex items-center gap-2 p-2 rounded bg-cyber-gray/30 ${getSkillColor(skill.status)}`}
+                                            >
+                                                {getSkillIcon(skill.status)}
+                                                <span className="text-[10px] uppercase tracking-wide font-mono truncate">
+                                                    {skill.label}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
             
-            {/* LEFT SIDEBAR - Stats */}
+            {/* LEFT SIDEBAR - Stats (Desktop Only) */}
             <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-64 p-6 pt-20 flex flex-col gap-6 h-full"
+                className="hidden md:flex w-64 p-6 pt-20 flex-col gap-6 h-full"
             >
                 {/* Header */}
                 <div className="border-l-2 border-neon-cyan pl-4">
@@ -190,13 +324,13 @@ export default function HudOverlay() {
                 </div>
             </motion.div>
 
-            {/* RIGHT SIDEBAR - Skills */}
+            {/* RIGHT SIDEBAR - Skills (Desktop Only) */}
             <div className="flex-1" />
             <motion.div
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-80 p-6 pt-20 flex flex-col"
+                className="hidden md:flex w-80 p-6 pt-20 flex-col"
             >
                 {/* Header */}
                 <div className="border-l-2 border-neon-red pl-4 mb-6">
@@ -254,8 +388,8 @@ export default function HudOverlay() {
                 </div>
             </motion.div>
 
-            {/* Top branding - moved to left */}
-            <div className="absolute top-6 left-6 text-left pointer-events-none">
+            {/* Top branding - Desktop Only */}
+            <div className="hidden md:block absolute top-6 left-6 text-left pointer-events-none">
                 <div className="text-neon-cyan text-sm font-bold tracking-[0.3em] drop-shadow-[0_0_8px_rgba(0,243,255,0.8)]">
                     {playerStats?.name.toUpperCase() || "BHOMIK GOYAL"}
                 </div>

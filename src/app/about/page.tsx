@@ -25,19 +25,19 @@ export default function AboutPage() {
     }, []);
 
     return (
-        <div className="relative w-full min-h-screen overflow-hidden">
+        <div className="relative w-full min-h-screen overflow-y-auto overflow-x-hidden">
             {/* Background 3D Scene (Dimmed) */}
             <div className="absolute inset-0 opacity-30 pointer-events-none">
                 <AvatarScene />
             </div>
 
-            <div className="relative z-10 container mx-auto px-4 py-24 h-full flex flex-col md:flex-row gap-12 items-center justify-center">
+            <div className="relative z-10 container mx-auto px-4 py-20 md:py-24 min-h-full flex flex-col md:flex-row gap-6 md:gap-12 items-center justify-start md:justify-center">
                 {/* Character Card */}
                 <motion.div
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="w-full md:w-1/3 bg-cyber-black/80 border border-neon-cyan/30 p-1 backdrop-blur-md rounded-lg relative"
+                    className="w-full md:w-1/3 bg-cyber-black/80 border border-neon-cyan/30 p-1 backdrop-blur-md rounded-lg relative flex-shrink-0"
                 >
                     {/* Decorative Corners */}
                     <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-cyan" />
@@ -51,7 +51,7 @@ export default function AboutPage() {
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-neon-cyan/20" />
                         </div>
 
-                        <h2 className="text-2xl font-bold text-white font-orbitron tracking-widest mb-1">
+                        <h2 className="text-xl md:text-2xl font-bold text-white font-orbitron tracking-widest mb-1">
                             {profile?.name || "BHOMIK GOYAL"}
                         </h2>
                         <div className="text-neon-cyan font-mono text-sm mb-4">
@@ -81,7 +81,7 @@ export default function AboutPage() {
                     className="w-full md:w-2/3"
                 >
                     <div className="mb-6">
-                        <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
+                        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
                             CHARACTER LORE
                         </h1>
                         <p className="text-neon-cyan/60 text-sm uppercase tracking-[0.3em] mt-2">
@@ -90,7 +90,7 @@ export default function AboutPage() {
                         </p>
                     </div>
 
-                    <div className="bg-black/40 border-l-2 border-neon-cyan p-6 backdrop-blur-sm text-gray-300 leading-relaxed font-rajdhani text-lg h-[400px] overflow-y-auto custom-scrollbar">
+                    <div className="bg-black/40 border-l-2 border-neon-cyan p-4 md:p-6 backdrop-blur-sm text-gray-300 leading-relaxed font-rajdhani text-base md:text-lg max-h-[300px] md:h-[400px] overflow-y-auto custom-scrollbar">
                         {profile?.bio ? (
                             <div className="prose prose-invert prose-p:text-gray-300 prose-headings:text-neon-cyan prose-strong:text-neon-purple">
                                 <ReactMarkdown>

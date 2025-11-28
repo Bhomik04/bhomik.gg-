@@ -38,13 +38,13 @@ export default function ProjectsPage() {
     }, []);
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 md:px-12 bg-cyber-black relative overflow-hidden">
+        <div className="min-h-screen pt-20 md:pt-24 pb-20 md:pb-12 px-4 md:px-12 bg-cyber-black relative overflow-y-auto overflow-x-hidden">
             {/* Background Grid */}
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 pointer-events-none" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="mb-12">
-                    <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
+                <div className="mb-8 md:mb-12">
+                    <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
                         MISSION LOG
                     </h1>
                     <p className="text-neon-cyan/60 text-sm uppercase tracking-[0.3em] mt-2">
@@ -55,7 +55,7 @@ export default function ProjectsPage() {
                 {loading ? (
                     <div className="text-neon-cyan animate-pulse font-mono">LOADING MISSION DATA...</div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                         {projects.map((project, index) => (
                             <motion.div
                                 key={project.id}
@@ -65,7 +65,7 @@ export default function ProjectsPage() {
                                 className="group relative bg-cyber-gray/30 border border-neon-cyan/20 rounded-lg overflow-hidden hover:border-neon-cyan/60 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,243,255,0.1)]"
                             >
                                 {/* Image / Thumbnail */}
-                                <div className="h-48 bg-black/50 relative overflow-hidden">
+                                <div className="h-36 md:h-48 bg-black/50 relative overflow-hidden">
                                     {project.image_url ? (
                                         <img
                                             src={project.image_url}
@@ -82,7 +82,7 @@ export default function ProjectsPage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-cyber-black via-transparent to-transparent" />
                                 </div>
 
-                                <div className="p-6 relative">
+                                <div className="p-4 md:p-6 relative">
                                     <h3 className="text-xl font-bold text-white font-orbitron tracking-wide mb-2 group-hover:text-neon-cyan transition-colors">
                                         {project.title}
                                     </h3>

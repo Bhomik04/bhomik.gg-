@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
@@ -17,9 +17,23 @@ const rajdhani = Rajdhani({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#050505",
+};
+
 export const metadata: Metadata = {
   title: "Bhomik Goyal | Netrunner Portfolio",
   description: "A Living Portfolio RPG",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Bhomik.gg",
+  },
 };
 
 import Navigation from "@/components/ui/Navigation";
@@ -41,7 +55,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <Navigation />
         </Suspense>
-        <main className="relative z-10 h-full w-full overflow-hidden">
+        <main className="relative z-10 h-full w-full overflow-hidden pb-16 md:pb-0">
           {children}
         </main>
       </body>

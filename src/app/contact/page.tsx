@@ -5,11 +5,11 @@ import { Mail, Github, Linkedin, Twitter, Send } from "lucide-react";
 
 export default function ContactPage() {
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 md:px-12 bg-cyber-black relative overflow-hidden flex items-center justify-center">
+        <div className="min-h-screen pt-20 md:pt-24 pb-20 md:pb-12 px-4 md:px-12 bg-cyber-black relative overflow-y-auto overflow-x-hidden flex items-start md:items-center justify-center">
             {/* Background Effects */}
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 pointer-events-none" />
 
-            <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 py-4">
 
                 {/* Contact Info */}
                 <motion.div
@@ -18,7 +18,7 @@ export default function ContactPage() {
                     className="space-y-8"
                 >
                     <div>
-                        <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
+                        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
                             COMMS UPLINK
                         </h1>
                         <p className="text-neon-cyan/60 text-sm uppercase tracking-[0.3em] mt-2">
@@ -66,7 +66,7 @@ export default function ContactPage() {
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-cyber-gray/20 border border-neon-cyan/30 p-8 rounded-lg backdrop-blur-sm relative"
+                    className="bg-cyber-gray/20 border border-neon-cyan/30 p-6 md:p-8 rounded-lg backdrop-blur-sm relative"
                 >
                     {/* Decorative Corners */}
                     <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-cyan" />

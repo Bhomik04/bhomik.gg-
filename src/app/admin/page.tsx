@@ -49,9 +49,9 @@ export default function AdminOverview() {
     }, []);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             <div className="border-b border-neon-cyan/30 pb-4">
-                <h1 className="text-3xl font-bold text-neon-cyan font-orbitron tracking-widest">
+                <h1 className="text-2xl md:text-3xl font-bold text-neon-cyan font-orbitron tracking-widest">
                     SYSTEM OVERVIEW
                 </h1>
                 <p className="text-neon-cyan/50 text-xs uppercase tracking-wider mt-2">
@@ -59,7 +59,7 @@ export default function AdminOverview() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
                 <StatCard
                     icon={Network}
                     label="Skills"
@@ -86,9 +86,9 @@ export default function AdminOverview() {
                 />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-cyber-gray/20 border border-neon-cyan/20 p-6 rounded-lg flex flex-col items-center justify-center">
-                    <h2 className="text-xl font-bold text-neon-cyan mb-4 font-orbitron self-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+                <div className="bg-cyber-gray/20 border border-neon-cyan/20 p-4 md:p-6 rounded-lg flex flex-col items-center justify-center">
+                    <h2 className="text-lg md:text-xl font-bold text-neon-cyan mb-4 font-orbitron self-start">
                         ATTRIBUTE MATRIX
                     </h2>
                     {playerStats ? (
@@ -100,11 +100,11 @@ export default function AdminOverview() {
                     )}
                 </div>
 
-                <div className="bg-cyber-gray/20 border border-neon-cyan/20 p-6 rounded-lg">
-                    <h2 className="text-xl font-bold text-neon-cyan mb-4 font-orbitron">
+                <div className="bg-cyber-gray/20 border border-neon-cyan/20 p-4 md:p-6 rounded-lg">
+                    <h2 className="text-lg md:text-xl font-bold text-neon-cyan mb-4 font-orbitron">
                         QUICK ACTIONS
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <QuickLink
                             href="/admin/profile"
                             label="Edit Character Stats"
@@ -144,12 +144,12 @@ function StatCard({ icon: Icon, label, value, color }: { icon: LucideIcon; label
     };
 
     return (
-        <div className={`bg-black/40 border ${colorMap[color]} p-6 rounded-lg hover:bg-black/60 transition-all`}>
+        <div className={`bg-black/40 border ${colorMap[color]} p-4 md:p-6 rounded-lg hover:bg-black/60 transition-all`}>
             <div className="flex items-center justify-between mb-2">
-                <Icon size={24} className={colorMap[color]} />
-                <span className="text-3xl font-bold text-white font-orbitron">{value}</span>
+                <Icon size={20} className={`md:w-6 md:h-6 ${colorMap[color]}`} />
+                <span className="text-2xl md:text-3xl font-bold text-white font-orbitron">{value}</span>
             </div>
-            <div className="text-sm text-gray-400 uppercase tracking-wider">{label}</div>
+            <div className="text-xs md:text-sm text-gray-400 uppercase tracking-wider">{label}</div>
         </div>
     );
 }
@@ -158,10 +158,10 @@ function QuickLink({ href, label, description }: { href: string; label: string; 
     return (
         <a
             href={href}
-            className="block p-4 bg-black/30 border border-neon-cyan/20 rounded hover:border-neon-cyan/50 hover:bg-black/50 transition-all group"
+            className="block p-3 md:p-4 bg-black/30 border border-neon-cyan/20 rounded hover:border-neon-cyan/50 hover:bg-black/50 transition-all group touch-manipulation"
         >
-            <h3 className="text-neon-cyan font-bold mb-1 group-hover:text-white transition-colors">{label}</h3>
-            <p className="text-xs text-gray-500">{description}</p>
+            <h3 className="text-sm md:text-base text-neon-cyan font-bold mb-1 group-hover:text-white transition-colors">{label}</h3>
+            <p className="text-[10px] md:text-xs text-gray-500">{description}</p>
         </a>
     );
 }

@@ -37,10 +37,10 @@ export default function ExperiencePage() {
     }, []);
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 md:px-12 bg-cyber-black relative overflow-hidden">
+        <div className="min-h-screen pt-20 md:pt-24 pb-20 md:pb-12 px-4 md:px-12 bg-cyber-black relative overflow-y-auto overflow-x-hidden">
             <div className="max-w-4xl mx-auto">
-                <div className="mb-12">
-                    <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
+                <div className="mb-8 md:mb-12">
+                    <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple font-orbitron tracking-widest">
                         DATA ARCHIVES
                     </h1>
                     <p className="text-neon-cyan/60 text-sm uppercase tracking-[0.3em] mt-2">
@@ -51,19 +51,19 @@ export default function ExperiencePage() {
                 {loading ? (
                     <div className="text-neon-cyan animate-pulse font-mono">DECRYPTING ARCHIVES...</div>
                 ) : (
-                    <div className="relative border-l-2 border-neon-cyan/20 ml-4 md:ml-8 space-y-12">
+                    <div className="relative border-l-2 border-neon-cyan/20 ml-2 md:ml-4 lg:ml-8 space-y-8 md:space-y-12">
                         {experiences.map((exp, index) => (
                             <motion.div
                                 key={exp.id}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                className="relative pl-8 md:pl-12"
+                                className="relative pl-6 md:pl-8 lg:pl-12"
                             >
                                 {/* Timeline Dot */}
                                 <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 ${exp.type === 'work' ? 'border-neon-cyan bg-cyber-black' : 'border-neon-purple bg-cyber-black'} shadow-[0_0_10px_rgba(0,243,255,0.5)]`} />
 
-                                <div className="bg-cyber-gray/20 border border-neon-cyan/10 p-6 rounded-lg hover:bg-cyber-gray/30 transition-all group">
+                                <div className="bg-cyber-gray/20 border border-neon-cyan/10 p-4 md:p-6 rounded-lg hover:bg-cyber-gray/30 transition-all group">
                                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
                                         <div>
                                             <h3 className="text-xl font-bold text-white font-orbitron tracking-wide group-hover:text-neon-cyan transition-colors">

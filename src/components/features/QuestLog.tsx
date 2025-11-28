@@ -45,17 +45,17 @@ export default function QuestLog() {
 
     return (
         <div className="space-y-4">
-            <h3 className="text-xl font-bold text-neon-cyan font-orbitron tracking-widest mb-4 flex items-center gap-2">
-                <Star size={20} /> ACTIVE QUESTS
+            <h3 className="text-lg md:text-xl font-bold text-neon-cyan font-orbitron tracking-widest mb-4 flex items-center gap-2">
+                <Star size={18} className="md:w-5 md:h-5" /> ACTIVE QUESTS
             </h3>
             
-            <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+            <div className="space-y-3 max-h-[300px] md:max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
                 {quests.map((quest) => (
                     <motion.div
                         key={quest.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 border rounded-lg backdrop-blur-sm transition-all ${
+                        className={`p-3 md:p-4 border rounded-lg backdrop-blur-sm transition-all ${
                             quest.status === 'completed' 
                                 ? 'bg-neon-green/10 border-neon-green/30' 
                                 : 'bg-black/40 border-neon-cyan/30 hover:bg-neon-cyan/10'
@@ -69,18 +69,18 @@ export default function QuestLog() {
                                     ) : (
                                         <Circle size={16} className="text-neon-cyan" />
                                     )}
-                                    <h4 className={`font-bold ${quest.status === 'completed' ? 'text-neon-green' : 'text-white'}`}>
+                                    <h4 className={`font-bold text-sm md:text-base ${quest.status === 'completed' ? 'text-neon-green' : 'text-white'}`}>
                                         {quest.title}
                                     </h4>
                                     {quest.isDaily && (
-                                        <span className="text-[10px] bg-neon-purple/20 text-neon-purple px-1 rounded border border-neon-purple/30">
+                                        <span className="text-[8px] md:text-[10px] bg-neon-purple/20 text-neon-purple px-1 rounded border border-neon-purple/30">
                                             DAILY
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-sm text-gray-400 mb-2">{quest.description}</p>
+                                <p className="text-xs md:text-sm text-gray-400 mb-2">{quest.description}</p>
                                 
-                                <div className="flex gap-3 text-xs font-mono">
+                                <div className="flex flex-wrap gap-2 md:gap-3 text-[10px] md:text-xs font-mono">
                                     <span className="text-neon-yellow flex items-center gap-1">
                                         <Star size={10} /> {quest.xpReward} XP
                                     </span>
